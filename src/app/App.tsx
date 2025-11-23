@@ -11,6 +11,9 @@ import JadwalProduksi from "../modules/dashboard/JadwalProduksi.tsx";
 import Laporan from "../modules/dashboard/Laporan.tsx";
 import Pesanan from "../modules/dashboard/Pesanan.tsx";
 
+// Profil page
+import Profil from "../modules/profil/Profil.tsx";
+
 import "./App.css";
 
 function App() {
@@ -31,6 +34,9 @@ function App() {
         <Route path="/memories-bakery/dashboard/jadwal-produksi" element={<JadwalProduksi />} />
         <Route path="/memories-bakery/dashboard/laporan" element={<Laporan />} />
         <Route path="/memories-bakery/dashboard/pesanan" element={<Pesanan />} />
+
+        {/* Profil */}
+        <Route path="/memories-bakery/profil" element={<Profil />} />
       </Routes>
     </div>
   );

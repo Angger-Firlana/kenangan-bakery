@@ -1,0 +1,319 @@
+/* src/modules/profil/Profil.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Import base styles dari Dashboard.css */
+@import '../dashboard/Dashboard.css';
+
+/* ===== PROFIL CONTAINER ===== */
+.profil-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* ===== PROFILE HEADER CARD ===== */
+.profil-header-card {
+    background: linear-gradient(135deg, #8b5a2f 0%, #a87c52 100%);
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.profil-avatar-section {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.profil-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    backdrop-filter: blur(10px);
+}
+
+.profil-header-info h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+}
+
+.profil-position {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+.profil-email {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+}
+
+.profil-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.profil-logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* ===== PROFILE DETAILS CARD ===== */
+.profil-details-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 32px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.profil-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #f0e8e0;
+}
+
+.profil-card-header h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #3d3d3d;
+}
+
+.profil-edit-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #8b5a2f 0%, #a87c52 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profil-edit-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 90, 47, 0.3);
+}
+
+.profil-edit-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.profil-cancel-btn,
+.profil-save-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.profil-cancel-btn {
+    background: #f5f0eb;
+    color: #8b5a2f;
+}
+
+.profil-cancel-btn:hover {
+    background: #e8dfd4;
+}
+
+.profil-save-btn {
+    background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+    color: #fff;
+}
+
+.profil-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* ===== PROFILE INFO GRID ===== */
+.profil-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+}
+
+.profil-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.profil-info-full {
+    grid-column: 1 / -1;
+}
+
+.profil-info-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5d4037;
+}
+
+.profil-info-label svg {
+    color: #8b5a2f;
+}
+
+.profil-info-value {
+    font-size: 15px;
+    color: #3d3d3d;
+    padding: 12px 16px;
+    background: #f5f0eb;
+    border-radius: 8px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.profil-input,
+.profil-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e0d5ca;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #3d3d3d;
+    font-family: 'Poppins', sans-serif;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.profil-input:focus,
+.profil-textarea:focus {
+    outline: none;
+    border-color: #8b5a2f;
+    box-shadow: 0 0 0 3px rgba(139, 90, 47, 0.1);
+}
+
+.profil-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Active user button in header */
+.kb-user-btn.active {
+    background: linear-gradient(135deg, #8b5a2f 0%, #a87c52 100%);
+    color: #fff;
+    border-color: #8b5a2f;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .profil-header-card {
+        padding: 24px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profil-avatar-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+    }
+
+    .profil-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profil-header-info h2 {
+        font-size: 24px;
+    }
+
+    .profil-logout-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .profil-details-card {
+        padding: 20px;
+    }
+
+    .profil-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .profil-edit-btn,
+    .profil-edit-actions {
+        width: 100%;
+    }
+
+    .profil-edit-actions {
+        flex-direction: column;
+    }
+
+    .profil-cancel-btn,
+    .profil-save-btn {
+        width: 100%;
+    }
+
+    .profil-info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .profil-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profil-avatar svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .profil-header-info h2 {
+        font-size: 20px;
+    }
+
+    .profil-card-header h3 {
+        font-size: 18px;
+    }
+}

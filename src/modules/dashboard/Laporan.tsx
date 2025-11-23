@@ -82,9 +82,12 @@ export default function Laporan() {
       <main className="kb-main">
         <header className="kb-header">
           <h2>Laporan</h2>
-          <button className="kb-user-btn">
-            <User size={20} />
-          </button>
+          <button 
+  className="kb-user-btn"
+  onClick={() => navigate('/memories-bakery/profil')}
+>
+  <User size={20} />
+</button>
         </header>
 
         <div className="kb-content">

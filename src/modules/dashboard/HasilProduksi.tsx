@@ -81,9 +81,12 @@ export default function HasilProduksi() {
       <main className="kb-main">
         <header className="kb-header">
           <h2>Hasil Produksi</h2>
-          <button className="kb-user-btn">
-            <User size={20} />
-          </button>
+          <button 
+  className="kb-user-btn"
+  onClick={() => navigate('/memories-bakery/profil')}
+>
+  <User size={20} />
+</button>
         </header>
 
         <div className="kb-content">
