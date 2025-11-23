@@ -1,7 +1,9 @@
-import React from "react";
+// src/app/main.tsx
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import App from "./App.tsx";
 import { BrowserRouter } from "react-router-dom";
+import "./index.css";
 
 const rootElement = document.getElementById("root");
 
@@ -12,9 +14,9 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 
 root.render(
-  <React.StrictMode>
+  <StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </React.StrictMode>
+  </StrictMode>
 );
