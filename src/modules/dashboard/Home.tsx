@@ -29,6 +29,7 @@ const carouselImages = [
 export default function Home() {
   const [user, setUser] = useState<UserData | null>(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -44,10 +45,12 @@ export default function Home() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+      if (!isHovering) {
+        setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+      }
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [isHovering]);
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
@@ -90,16 +93,24 @@ export default function Home() {
           <button 
             className="kb-user-btn"
             onClick={() => navigate('/memories-bakery/profil')}
+            title={user?.fullName || 'Profile'}
           >
-            <User size={20} />
+            {user?.fullName ? (
+              <div className="kb-user-avatar">
+                {user.fullName.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <User size={20} />
+            )}
           </button>
         </header>
 
         <div className="kb-content">
-          <div className="kb-carousel">
-            <button className="kb-carousel-btn prev" onClick={prevSlide}>
-              <ChevronLeft size={24} />
-            </button>
+          <div 
+            className="kb-carousel-improved"
+            onMouseEnter={() => setIsHovering(true)}
+            onMouseLeave={() => setIsHovering(false)}
+          >
             <div className="kb-carousel-wrapper">
               {carouselImages.map((img, idx) => (
                 <div
@@ -109,9 +120,21 @@ export default function Home() {
                 />
               ))}
             </div>
-            <button className="kb-carousel-btn next" onClick={nextSlide}>
+            
+            <button 
+              className={`kb-carousel-btn prev ${isHovering ? 'show' : ''}`}
+              onClick={prevSlide}
+            >
+              <ChevronLeft size={24} />
+            </button>
+            
+            <button 
+              className={`kb-carousel-btn next ${isHovering ? 'show' : ''}`}
+              onClick={nextSlide}
+            >
               <ChevronRight size={24} />
             </button>
+
             <div className="kb-carousel-dots">
               {carouselImages.map((_, idx) => (
                 <button
@@ -139,23 +162,23 @@ export default function Home() {
             <div className="kb-stat-card">
               <h3>Top Branch</h3>
               <div className="kb-stat-content">
-                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=150" alt="Croissant" className="kb-stat-img" />
+                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=150" alt="Branch" className="kb-stat-img" />
                 <div className="kb-stat-info">
-                  <h4>Croissant</h4>
-                  <p className="kb-stat-number">230.923</p>
+                  <h4>Jakarta Pusat</h4>
+                  <p className="kb-stat-number">450.250</p>
                   <p className="kb-stat-label">Penjualan</p>
                 </div>
               </div>
             </div>
 
             <div className="kb-stat-card">
-              <h3>Customer</h3>
+              <h3>Total Customer</h3>
               <div className="kb-stat-content">
-                <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=150" alt="Croissant" className="kb-stat-img" />
+                <div className="kb-stat-icon">👥</div>
                 <div className="kb-stat-info">
-                  <h4>Croissant</h4>
-                  <p className="kb-stat-number">230.923</p>
-                  <p className="kb-stat-label">Penjualan</p>
+                  <h4>Active</h4>
+                  <p className="kb-stat-number">1.234</p>
+                  <p className="kb-stat-label">Customers</p>
                 </div>
               </div>
             </div>

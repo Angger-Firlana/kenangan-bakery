@@ -95,11 +95,18 @@ export default function Pesanan() {
         <header className="kb-header">
           <h2>Pesanan</h2>
           <button 
-  className="kb-user-btn"
-  onClick={() => navigate('/memories-bakery/profil')}
->
-  <User size={20} />
-</button>
+            className="kb-user-btn"
+            onClick={() => navigate('/memories-bakery/profil')}
+            title={user?.fullName || 'Profile'}
+          >
+            {user?.fullName ? (
+              <div className="kb-user-avatar">
+                {user.fullName.charAt(0).toUpperCase()}
+              </div>
+            ) : (
+              <User size={20} />
+            )}
+          </button>
         </header>
 
         <div className="kb-content">
