@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { login } from '../../services/authService';
 import './Auth.css';
 
 export default function Login() {
@@ -11,20 +12,32 @@ export default function Login() {
   });
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('user', JSON.stringify({ username: formData.username }));
-    
-    // FIX: dashboard pakai base prefix
-    navigate('/memories-bakery/dashboard');
+
+    try {
+      const res = await login(formData.username, formData.password);
+
+      if (!res.success) {
+        alert(res.message);
+        return;
+      }
+
+      // Simpan token dan user
+      localStorage.setItem('isLoggedIn', 'true')
+      console.log(res.token)
+      localStorage.setItem('token', res.token || '');
+      
+      localStorage.setItem('user', JSON.stringify(res.user));
+
+      navigate('/memories-bakery/dashboard');
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Login gagal');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (

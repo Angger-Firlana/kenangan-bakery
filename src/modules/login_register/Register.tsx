@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { register} from '../../services/authService';
 import './Auth.css';
 
 export default function Register() {
-  const [showPassword, setShowPassword] = useState(false);
+ const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -12,9 +13,10 @@ export default function Register() {
     password: '',
     confirmPassword: ''
   });
+
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
@@ -22,21 +24,28 @@ export default function Register() {
       return;
     }
 
-    localStorage.setItem('isLoggedIn', 'true');
-    localStorage.setItem('user', JSON.stringify({
-      fullName: formData.fullName,
-      username: formData.username
-    }));
+    try {
+      // anggap email = username + "@mail.com"
+      const email = `${formData.username}@mail.com`;
 
-    // FIX: Dashboard pakai prefix
-    navigate('/memories-bakery/dashboard');
+      const res = await register(formData.username, email, formData.password);
+
+      if (!res.success) {
+        alert(res.message);
+        return;
+      }
+
+      localStorage.setItem('token', res.token || '');
+      localStorage.setItem('user', JSON.stringify(res.user));
+
+      navigate('/memories-bakery/dashboard');
+    } catch (err: any) {
+      alert(err.response?.data?.message || 'Registrasi gagal');
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   return (

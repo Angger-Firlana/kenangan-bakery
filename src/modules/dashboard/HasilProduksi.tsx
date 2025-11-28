@@ -1,50 +1,108 @@
 // src/modules/dashboard/HasilProduksi.tsx
-import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Home, Package, Box, Calendar, FileText, ShoppingBag, User, Plus, Search } from 'lucide-react';
-import './Dashboard.css';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import {
+  Home, Package, Box, Calendar, FileText, ShoppingBag, User, Plus, Search, Edit, Trash2, ImageIcon
+} from "lucide-react";
+import "./Dashboard.css";
 
-interface UserData {
-  fullName?: string;
-  email?: string;
-}
+import type { MenuItem } from "../../types/menu";
+import type { Ingredient } from "../../types/ingredient";
 
-const menuItems = [
-  { id: 'home', label: 'Home', icon: Home, path: '/memories-bakery/dashboard' },
-  { id: 'hasil-produksi', label: 'Hasil Produksi', icon: Package, path: '/memories-bakery/dashboard/hasil-produksi' },
-  { id: 'bahan-baku', label: 'Bahan Baku', icon: Box, path: '/memories-bakery/dashboard/bahan-baku' },
-  { id: 'jadwal-produksi', label: 'Jadwal Produksi', icon: Calendar, path: '/memories-bakery/dashboard/jadwal-produksi' },
-  { id: 'laporan', label: 'Laporan', icon: FileText, path: '/memories-bakery/dashboard/laporan' },
-  { id: 'pesanan', label: 'Pesanan', icon: ShoppingBag, path: '/memories-bakery/dashboard/pesanan' },
-];
+import { getMenus, deleteMenu } from "../../services/menuService";
+import { getIngredients } from "../../services/ingredientService";
 
-const products = [
-  { id: 1, name: 'Croissant', kategori: 'Pastry', stok: 150, harga: 25000 },
-  { id: 2, name: 'Roti Tawar', kategori: 'Roti', stok: 200, harga: 18000 },
-  { id: 3, name: 'Red Velvet Cake', kategori: 'Cake', stok: 30, harga: 85000 },
-  { id: 4, name: 'Donut Coklat', kategori: 'Pastry', stok: 80, harga: 12000 },
-  { id: 5, name: 'Cheese Bread', kategori: 'Roti', stok: 120, harga: 15000 },
+import AddEditMenuModal from "./component/AddEditMenuModal";
+import DeleteConfirmDialog from "./component/DeleteConfirmDialog";
+
+const menuItemsNav = [
+  { id: "home", label: "Home", icon: Home, path: "/memories-bakery/dashboard" },
+  { id: "hasil-produksi", label: "Hasil Produksi", icon: Package, path: "/memories-bakery/dashboard/hasil-produksi" },
+  { id: "bahan-baku", label: "Bahan Baku", icon: Box, path: "/memories-bakery/dashboard/bahan-baku" },
+  { id: "jadwal-produksi", label: "Jadwal Produksi", icon: Calendar, path: "/memories-bakery/dashboard/jadwal-produksi" },
+  { id: "laporan", label: "Laporan", icon: FileText, path: "/memories-bakery/dashboard/laporan" },
+  { id: "pesanan", label: "Pesanan", icon: ShoppingBag, path: "/memories-bakery/dashboard/pesanan" },
 ];
 
 export default function HasilProduksi() {
-  const [user, setUser] = useState<UserData | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState<{ fullName?: string } | null>(null);
+  const [menus, setMenus] = useState<MenuItem[]>([]);
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const [addEditOpen, setAddEditOpen] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
+
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null);
+
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    const userData = localStorage.getItem('user');
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    const userData = localStorage.getItem("user");
     if (!isLoggedIn || !userData) {
-      navigate('/memories-bakery/login');
+      navigate("/memories-bakery/login");
       return;
     }
     setUser(JSON.parse(userData));
-  }, [navigate]);
+    loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const loadAll = async () => {
+    setLoading(true);
+    try {
+      const menusRes = await getMenus(); // returns MenuItem[]
+      setMenus(menusRes);
+
+      const ingRes = await getIngredients(); // IngredientResponse { success, message, data: [] }
+      const ingData = (ingRes as any)?.data ?? (ingRes as any);
+      setIngredients(ingData);
+    } catch (err) {
+      console.error(err);
+      alert("Gagal memuat data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filtered = menus.filter((m) => m.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const openAdd = () => {
+    setEditingId(null);
+    setAddEditOpen(true);
+  };
+
+  const openEdit = (id: number) => {
+    setEditingId(id);
+    setAddEditOpen(true);
+  };
+
+  const handleSaved = async () => {
+    await loadAll();
+  };
+
+  const confirmDelete = (id: number) => {
+    setDeleteId(id);
+    setDeleteOpen(true);
+  };
+
+  const doDelete = async () => {
+    if (!deleteId) return;
+    try {
+      await deleteMenu(deleteId);
+      setMenus((p) => p.filter((m) => m.id !== deleteId));
+      setDeleteOpen(false);
+      setDeleteId(null);
+      alert("Data berhasil dihapus");
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus data");
+    }
+  };
 
   if (!user) return <div className="loading">Loading...</div>;
 
@@ -60,18 +118,16 @@ export default function HasilProduksi() {
             </div>
           </div>
         </div>
+
         <nav className="kb-nav">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`kb-nav-item ${location.pathname === item.path ? 'active' : ''}`}
-              onClick={() => navigate(item.path)}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
+          {menuItemsNav.map((it) => (
+            <button key={it.id} className={`kb-nav-item ${location.pathname === it.path ? "active" : ""}`} onClick={() => navigate(it.path)}>
+              <it.icon size={20} />
+              <span>{it.label}</span>
             </button>
           ))}
         </nav>
+
         <div className="kb-sidebar-footer">
           <p>KenanganBakery</p>
           <p>Reserved</p>
@@ -81,18 +137,8 @@ export default function HasilProduksi() {
       <main className="kb-main">
         <header className="kb-header">
           <h2>Hasil Produksi</h2>
-          <button 
-            className="kb-user-btn"
-            onClick={() => navigate('/memories-bakery/profil')}
-            title={user?.fullName || 'Profile'}
-          >
-            {user?.fullName ? (
-              <div className="kb-user-avatar">
-                {user.fullName.charAt(0).toUpperCase()}
-              </div>
-            ) : (
-              <User size={20} />
-            )}
+          <button className="kb-user-btn" onClick={() => navigate("/memories-bakery/profil")} title={user?.fullName ?? "Profile"}>
+            {user?.fullName ? <div className="kb-user-avatar">{user.fullName.charAt(0).toUpperCase()}</div> : <User size={20} />}
           </button>
         </header>
 
@@ -103,16 +149,10 @@ export default function HasilProduksi() {
               <div className="kb-card-actions">
                 <div className="kb-search-box">
                   <Search size={18} />
-                  <input 
-                    type="text" 
-                    placeholder="Cari produk..." 
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
+                  <input placeholder="Cari produk..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
                 </div>
-                <button className="kb-btn-primary">
-                  <Plus size={18} />
-                  Tambah Produk
+                <button className="kb-btn-primary" onClick={openAdd}>
+                  <Plus size={18} /> Tambah Produk
                 </button>
               </div>
             </div>
@@ -130,27 +170,63 @@ export default function HasilProduksi() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredProducts.map((product, idx) => (
-                    <tr key={product.id}>
-                      <td>{idx + 1}</td>
-                      <td>{product.name}</td>
-                      <td><span className="kb-badge">{product.kategori}</span></td>
-                      <td>{product.stok}</td>
-                      <td>Rp {product.harga.toLocaleString()}</td>
-                      <td>
-                        <div className="kb-table-actions">
-                          <button className="kb-btn-sm edit">Edit</button>
-                          <button className="kb-btn-sm delete">Hapus</button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {loading ? (
+                    <tr><td colSpan={6}>Loading...</td></tr>
+                  ) : filtered.length === 0 ? (
+                    <tr><td colSpan={6}>Tidak ada produk</td></tr>
+                  ) : (
+                    filtered.map((m, i) => (
+                      <tr key={m.id}>
+                        <td>{i + 1}</td>
+                        <td style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {m.photo ? (
+                            // If backend returns relative path, you might need to prefix with baseURL
+                            <img src={m.photo} alt={m.name} style={{ width: 48, height: 48, objectFit: "cover", borderRadius: 6 }} />
+                          ) : (
+                            <div style={{ width: 48, height: 48, display: "grid", placeItems: "center", background: "#f3f3f3", borderRadius: 6 }}>
+                              <ImageIcon size={20} />
+                            </div>
+                          )}
+                          <div>
+                            <div style={{ fontWeight: 600 }}>{m.name}</div>
+                            <div style={{ fontSize: 12, color: "#666" }}>{m.description}</div>
+                          </div>
+                        </td>
+                        <td><span className="kb-badge">{m.type.type_name}</span></td>
+                        <td>{m.stock}</td>
+                        <td>Rp {m.price.toLocaleString()}</td>
+                        <td>
+                          <div className="kb-table-actions">
+                            <button className="kb-btn-sm edit" onClick={() => openEdit(m.id)}><Edit size={14} /> Edit</button>
+                            <button className="kb-btn-sm delete" onClick={() => confirmDelete(m.id)}><Trash2 size={14} /> Hapus</button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
       </main>
+
+      <AddEditMenuModal
+        isOpen={addEditOpen}
+        onClose={() => { setAddEditOpen(false); setEditingId(null); }}
+        onSaved={handleSaved}
+        editingId={editingId ?? undefined}
+        ingredients={ingredients}
+        initialBranchId={3}
+      />
+
+      <DeleteConfirmDialog
+        isOpen={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        onConfirm={doDelete}
+        title="Hapus Produk"
+        message="Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak bisa dibatalkan."
+      />
     </div>
   );
 }
