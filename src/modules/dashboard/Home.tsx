@@ -63,7 +63,7 @@ export default function Home() {
 
       <main className="kb-main">
         <header className="kb-header">
-          <h2>Home</h2>
+          <h2>Home</h2>/'.]='
           <button 
             className="kb-user-btn"
             onClick={() => navigate('/memories-bakery/profil')}
