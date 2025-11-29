@@ -59,33 +59,7 @@ export default function Home() {
 
   return (
     <div className="kb-container">
-      <aside className="kb-sidebar">
-        <div className="kb-sidebar-header">
-          <div className="kb-logo">
-            <div className="kb-logo-icon">🍞</div>
-            <div className="kb-logo-text">
-              <h1>Kenangan Bakery</h1>
-              <p>Setiap Rasa Memiliki Kenangan</p>
-            </div>
-          </div>
-        </div>
-        <nav className="kb-nav">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`kb-nav-item ${location.pathname === item.path ? 'active' : ''}`}
-              onClick={() => navigate(item.path)}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="kb-sidebar-footer">
-          <p>KenanganBakery</p>
-          <p>Reserved</p>
-        </div>
-      </aside>
+      
 
       <main className="kb-main">
         <header className="kb-header">

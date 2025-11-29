@@ -1,19 +1,15 @@
 // src/modules/dashboard/JadwalProduksi.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
-  Home,
-  Package,
-  Box,
-  Calendar,
-  FileText,
-  ShoppingBag,
   User,
   Plus,
   Clock,
   Edit,
   Trash2,
   X,
+  Calendar as CalendarIcon,
+  Package as PackageIcon
 } from "lucide-react";
 import "./Dashboard.css";
 
@@ -31,15 +27,6 @@ interface UserData {
   fullName?: string;
   email?: string;
 }
-
-const menuItems = [
-  { id: "home", label: "Home", icon: Home, path: "/memories-bakery/dashboard" },
-  { id: "hasil-produksi", label: "Hasil Produksi", icon: Package, path: "/memories-bakery/dashboard/hasil-produksi" },
-  { id: "bahan-baku", label: "Bahan Baku", icon: Box, path: "/memories-bakery/dashboard/bahan-baku" },
-  { id: "jadwal-produksi", label: "Jadwal Produksi", icon: Calendar, path: "/memories-bakery/dashboard/jadwal-produksi" },
-  { id: "laporan", label: "Laporan", icon: FileText, path: "/memories-bakery/dashboard/laporan" },
-  { id: "pesanan", label: "Pesanan", icon: ShoppingBag, path: "/memories-bakery/dashboard/pesanan" },
-];
 
 const getStatusClass = (status: string) => {
   switch (status) {
@@ -91,7 +78,6 @@ function formatDateReadable(iso?: string) {
 export default function JadwalProduksi() {
   const [user, setUser] = useState<UserData | null>(null);
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [schedules, setSchedules] = useState<ProductionSchedule[]>([]);
   const [loading, setLoading] = useState(false);
@@ -226,35 +212,7 @@ export default function JadwalProduksi() {
   if (!user) return <div className="loading">Loading...</div>;
 
   return (
-    <div className="kb-container">
-      <aside className="kb-sidebar">
-        <div className="kb-sidebar-header">
-          <div className="kb-logo">
-            <div className="kb-logo-icon">🍞</div>
-            <div className="kb-logo-text">
-              <h1>Kenangan Bakery</h1>
-              <p>Setiap Rasa Memiliki Kenangan</p>
-            </div>
-          </div>
-        </div>
-        <nav className="kb-nav">
-          {menuItems.map((item) => (
-            <button
-              key={item.id}
-              className={`kb-nav-item ${location.pathname === item.path ? "active" : ""}`}
-              onClick={() => navigate(item.path)}
-            >
-              <item.icon size={20} />
-              <span>{item.label}</span>
-            </button>
-          ))}
-        </nav>
-        <div className="kb-sidebar-footer">
-          <p>KenanganBakery</p>
-          <p>Reserved</p>
-        </div>
-      </aside>
-
+    <>
       <main className="kb-main">
         <header className="kb-header">
           <h2>Jadwal Produksi</h2>
@@ -300,11 +258,11 @@ export default function JadwalProduksi() {
                     </div>
                     <div className="kb-schedule-body">
                       <div className="kb-schedule-info">
-                        <Calendar size={16} />
+                        <CalendarIcon size={16} />
                         <span>{formatDateReadable(jadwal.schedule_date)}</span>
                       </div>
                       <div className="kb-schedule-info">
-                        <Package size={16} />
+                        <PackageIcon size={16} />
                         <span>
                           {jadwal.production_schedule_details.reduce((a: number, b: ProductionScheduleDetail) => a + b.quantity, 0)} pcs total
                         </span>
@@ -349,14 +307,14 @@ export default function JadwalProduksi() {
                 <div>
                   <h3>{editingSchedule ? "Edit Jadwal Produksi" : "Tambah Jadwal Produksi"}</h3>
                   <p className="kb-modal-subtitle">
-                    {editingSchedule 
-                      ? "Perbarui informasi jadwal produksi" 
+                    {editingSchedule
+                      ? "Perbarui informasi jadwal produksi"
                       : "Buat jadwal produksi baru untuk hari ini"}
                   </p>
                 </div>
               </div>
-              <button 
-                className="kb-modal-close" 
+              <button
+                className="kb-modal-close"
                 onClick={() => setIsModalOpen(false)}
                 title="Tutup"
               >
@@ -383,8 +341,8 @@ export default function JadwalProduksi() {
                   <label className="kb-label">
                     Status <span className="kb-required">*</span>
                   </label>
-                  <select 
-                    value={formStatus} 
+                  <select
+                    value={formStatus}
                     onChange={(e) => setFormStatus(e.target.value)}
                     className="kb-input kb-select"
                   >
@@ -430,8 +388,8 @@ export default function JadwalProduksi() {
                         />
                       </div>
 
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={() => removeDetailRow(idx)}
                         className="kb-btn-icon-danger"
                         disabled={formDetails.length === 1}
@@ -443,8 +401,8 @@ export default function JadwalProduksi() {
                   ))}
                 </div>
 
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={addDetailRow}
                   className="kb-btn-add-item"
                 >
@@ -454,16 +412,16 @@ export default function JadwalProduksi() {
             </form>
 
             <div className="kb-modal-footer">
-              <button 
+              <button
                 type="button"
-                className="kb-btn-secondary" 
+                className="kb-btn-secondary"
                 onClick={() => setIsModalOpen(false)}
               >
                 Batal
               </button>
-              <button 
+              <button
                 type="button"
-                className="kb-btn-primary" 
+                className="kb-btn-primary"
                 onClick={() => submitForm()}
               >
                 {editingSchedule ? "Update Jadwal" : "Simpan Jadwal"}
@@ -472,6 +430,6 @@ export default function JadwalProduksi() {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 }
